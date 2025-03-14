@@ -27,5 +27,9 @@ public class RecensioneService {
         Evento evento = eventoService.findById(eventoId);
         return recensioneRepository.existsByUtenteAndEvento(utente, evento);
     }
+
+    public void addRecensione(Recensione recensione) {
+        recensioneRepository.save(recensione);
+    }
     
 }
