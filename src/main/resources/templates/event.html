@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${evento.titolo}">Event Details</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container my-5">
+        <!-- Back button -->
+        <a href="javascript:history.back()" class="btn btn-secondary mb-4">← Torna indietro</a>
+        
+        <!-- Event details card -->
+        <div class="card mb-5">
+            <div class="card-header bg-primary text-white">
+                <h1 th:text="${evento.titolo}" class="mb-0">Event Title</h1>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h4>Descrizione</h4>
+                        <p th:text="${evento.descrizione}" class="lead">Description</p>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <h5>Data e Orario</h5>
+                                <p>
+                                    <span th:text="${#temporals.format(evento.data, 'dd/MM/yyyy')}">01/01/2025</span> - 
+                                    <span th:text="${#temporals.format(evento.orario, 'HH:mm')}">20:00</span>
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Prezzo</h5>
+                                <p th:text="${#numbers.formatDecimal(evento.prezzo, 1, 2) + ' €'}">0.00 €</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <h5>Sede</h5>
+                            <p th:text="${evento.sede.nome + ' - ' + evento.sede.indirizzo}">Venue name - Address</p>
+                            <p><strong>Capienza:</strong> <span th:text="${evento.sede.capienza}">0</span> posti</p>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <h5>Artisti</h5>
+                            <ul class="list-unstyled">
+                                <li th:each="artista : ${evento.artisti}" class="mb-1">
+                                    <span th:text="${artista.nome}">Artist Name</span> 
+                                    <span class="badge badge-info" th:text="${artista.genere}">Genre</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <!-- Reservation form -->
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">Prenota</h5>
+                            </div>
+                            <div class="card-body">
+                                <form th:action="@{/prenotazioni/create}" method="post">
+                                    <input type="hidden" name="eventoId" th:value="${evento.id}">
+                                    
+                                    <div class="form-group">
+                                        <label for="numeroBiglietti">Numero biglietti</label>
+                                        <input type="number" class="form-control" id="numeroBiglietti" 
+                                               name="numeroBiglietti" min="1" required>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-success btn-block">Prenota ora</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Reviews section -->
+        <div class="card mb-5">
+            <div class="card-header bg-info text-white">
+                <h3>Recensioni</h3>
+            </div>
+            <div class="card-body">
+                <!-- Existing reviews -->
+                <div th:if="${!#lists.isEmpty(evento.recensioni)}" class="mb-4">
+                    <div th:each="recensione : ${evento.recensioni}" class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 th:text="${recensione.utente.nome}" class="mb-0">User name</h5>
+                                <div>
+                                    <span class="badge badge-primary" th:text="${'Voto: ' + recensione.valutatione + '/5'}">Rating</span>
+                                </div>
+                            </div>
+                            <p th:text="${recensione.commento}" class="mb-0">Comment</p>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${#lists.isEmpty(evento.recensioni)}" class="alert alert-light">
+                    Nessuna recensione disponibile per questo evento.
+                </div>
+                
+                <!-- Add review form -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5>Lascia una recensione</h5>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/recensioni/create}" method="post">
+                            <input type="hidden" name="eventoId" th:value="${evento.id}">
+                            
+                            <div class="form-group">
+                                <label for="valutazione">Valutazione</label>
+                                <select class="form-control" id="valutazione" name="valutazione" required>
+                                    <option value="1">1 - Pessimo</option>
+                                    <option value="2">2 - Scarso</option>
+                                    <option value="3">3 - Nella media</option>
+                                    <option value="4">4 - Buono</option>
+                                    <option value="5">5 - Eccellente</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="commento">Commento</label>
+                                <textarea class="form-control" id="commento" name="commento" rows="3" required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Invia recensione</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

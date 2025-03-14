@@ -1,11 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Eventi Disponibili</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    sei nella home daje
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Eventi App</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/auth/logout}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Eventi Disponibili</h1>
+            <div>
+                <a th:href="@{/prenotazioni/history}" class="btn btn-info mr-2">Le Mie Prenotazioni</a>
+                <a th:href="@{/recensioni/history}" class="btn btn-secondary">Le Mie Recensioni</a>
+            </div>
+        </div>
+
+        <!-- Filtri (opzionale) -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form th:action="@{/home}" method="get" class="row">
+                    <div class="form-group col-md-4">
+                        <label for="data">Data</label>
+                        <input type="date" id="data" name="data" class="form-control" th:value="${param.data}">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="sede">Sede</label>
+                        <select id="sede" name="sedeId" class="form-control">
+                            <option value="">Tutte le sedi</option>
+                            <option th:each="sede : ${sedi}" 
+                                    th:value="${sede.id}" 
+                                    th:text="${sede.nome}"
+                                    th:selected="${param.sedeId != null && param.sedeId[0] == sede.id.toString()}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary">Filtra</button>
+                        <a th:href="@{/home}" class="btn btn-outline-secondary ml-2">Reset</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Lista Eventi -->
+        <div class="row">
+            <div th:each="evento : ${eventi}" class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-header" th:text="${#temporals.format(evento.data, 'dd/MM/yyyy')}">01/01/2025</div>
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${evento.titolo}">Titolo Evento</h5>
+                        <p class="card-text" th:text="${#strings.abbreviate(evento.descrizione, 100)}">Descrizione breve...</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge badge-primary" th:text="${#temporals.format(evento.orario, 'HH:mm')}">20:00</span>
+                            <span th:text="${#numbers.formatDecimal(evento.prezzo, 1, 2) + ' €'}">0.00 €</span>
+                        </div>
+                        <p class="mt-2 text-muted">
+                            <small th:text="${evento.sede.nome}">Nome Sede</small>
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <a th:href="@{'/eventi/' + ${evento.id}}" class="btn btn-sm btn-outline-primary btn-block">Dettagli</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messaggio se non ci sono eventi -->
+        <div th:if="${#lists.isEmpty(eventi)}" class="alert alert-info">
+            Nessun evento disponibile al momento.
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
