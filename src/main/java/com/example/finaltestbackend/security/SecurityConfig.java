@@ -60,6 +60,7 @@ public class SecurityConfig {
             .formLogin(form -> form
                 .loginPage("/auth/login")
                 .loginProcessingUrl("/auth/login")
+                .usernameParameter("email")
                 .defaultSuccessUrl("/home", true) // Redirect in caso di login avvenuto con successo
                 .permitAll())
             .logout(logout -> logout

@@ -19,7 +19,7 @@ public class AuthController {
     private final UtenteService utenteService;
 
     /**
-     * Mostra il modulo di registrazione.
+     * Mostra il modulo di registrazione. its ok
      *
      * @param model Model per passare dati alla vista
      * @return Nome del template Thymeleaf per la registrazione
@@ -31,7 +31,7 @@ public class AuthController {
     }
 
     /**
-     * Gestisce la registrazione di un nuovo utente.
+     * Gestisce la registrazione di un nuovo utente. its ok
      *
      * @param user Oggetto User ottenuto dal form di registrazione
      * @return Redirect alla pagina di login
@@ -43,7 +43,7 @@ public class AuthController {
     }
 
     /**
-     * Mostra il modulo di login.
+     * Mostra il modulo di login. its ok
      *
      * @return Nome del template Thymeleaf per il login
      */
