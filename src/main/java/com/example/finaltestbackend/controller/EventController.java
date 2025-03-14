@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.finaltestbackend.model.Evento;
 import com.example.finaltestbackend.repository.EventoRepository;
+import com.example.finaltestbackend.service.EventoService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,14 +18,25 @@ import lombok.RequiredArgsConstructor;
 public class EventController {
 
     private final EventoRepository eventoRepository;
+    private final EventoService eventoService;  // Add this service
 
     @GetMapping
-    public String getEvent(@PathVariable Long id,Model model) {
-        Evento evento =  eventoRepository.findById(id).orElse(null);
+    public String getEvent(@PathVariable Long id, Model model) {
+        Evento evento = eventoRepository.findById(id).orElse(null);
         if (evento == null) {
             return "redirect:/login";
         }
-        model.addAttribute("evento",evento);
+        
+        // Add ticket availability information
+        int bookedTickets = eventoService.getBookedTickets(id);
+        int availableTickets = evento.getSede().getCapienza() - bookedTickets;
+        int occupancyPercentage = eventoService.getAvailabilityPercentage(evento);
+        
+        model.addAttribute("evento", evento);
+        model.addAttribute("bookedTickets", bookedTickets);
+        model.addAttribute("availableTickets", availableTickets);
+        model.addAttribute("occupancyPercentage", occupancyPercentage);
+        
         return "event";
     }
     

@@ -38,5 +38,9 @@ public class RecensioneService {
         Utente utente = utenteService.findById(utenteId);
         return recensioneRepository.findByUtente(utente);
     }
+
+    public void deleteById(Long id) {
+        recensioneRepository.deleteById(id);
+    }
     
 }

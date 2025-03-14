@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutte le prenotazioni</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div th:replace="admin/fragments/navbar :: navbar"></div>
+    
+    <div class="container mt-5">
+        <h1>Tutte le prenotazioni</h1>
+        
+        <div class="table-responsive mt-4">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Utente</th>
+                        <th>Evento</th>
+                        <th>Data evento</th>
+                        <th>Biglietti</th>
+                        <th>Totale (€)</th>
+                        <th>Data prenotazione</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="prenotazione : ${prenotazioni}">
+                        <td th:text="${prenotazione.id}">1</td>
+                        <td th:text="${prenotazione.utente.nome + ' (' + prenotazione.utente.email + ')'}">
+                            Utente (email@example.com)
+                        </td>
+                        <td>
+                            <a th:href="@{/admin/prenotazioni/evento/{id}(id=${prenotazione.evento.id})}" 
+                               th:text="${prenotazione.evento.titolo}">
+                                Titolo Evento
+                            </a>
+                        </td>
+                        <td th:text="${#temporals.format(prenotazione.evento.data, 'dd/MM/yyyy')}">01/01/2025</td>
+                        <td th:text="${prenotazione.numeroBiglietti}">1</td>
+                        <td th:text="${#numbers.formatDecimal(prenotazione.numeroBiglietti * prenotazione.evento.prezzo, 1, 2) + ' €'}">
+                            0.00 €
+                        </td>
+                        <td th:text="${#temporals.format(prenotazione.dataPrenotazione, 'dd/MM/yyyy')}">01/01/2025</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div th:if="${#lists.isEmpty(prenotazioni)}" class="alert alert-info">
+            Non ci sono prenotazioni disponibili.
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

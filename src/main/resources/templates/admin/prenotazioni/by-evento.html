@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prenotazioni per evento</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div th:replace="admin/fragments/navbar :: navbar"></div>
+    
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Prenotazioni per <span th:text="${evento.titolo}">Evento</span></h1>
+            <a th:href="@{/admin/prenotazioni}" class="btn btn-secondary">Torna a tutte le prenotazioni</a>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Dettagli evento</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Data:</strong> <span th:text="${#temporals.format(evento.data, 'dd/MM/yyyy')}">01/01/2025</span></p>
+                        <p><strong>Orario:</strong> <span th:text="${#temporals.format(evento.orario, 'HH:mm')}">20:00</span></p>
+                        <p><strong>Sede:</strong> <span th:text="${evento.sede.nome}">Nome Sede</span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Capienza totale:</strong> <span th:text="${evento.sede.capienza}">100</span></p>
+                        <p><strong>Prezzo:</strong> <span th:text="${#numbers.formatDecimal(evento.prezzo, 1, 2) + ' €'}">0.00 €</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Utente</th>
+                        <th>Email</th>
+                        <th>Biglietti</th>
+                        <th>Totale (€)</th>
+                        <th>Data prenotazione</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="prenotazione : ${prenotazioni}">
+                        <td th:text="${prenotazione.id}">1</td>
+                        <td th:text="${prenotazione.utente.nome}">Nome Utente</td>
+                        <td th:text="${prenotazione.utente.email}">email@example.com</td>
+                        <td th:text="${prenotazione.numeroBiglietti}">1</td>
+                        <td th:text="${#numbers.formatDecimal(prenotazione.numeroBiglietti * evento.prezzo, 1, 2) + ' €'}">0.00 €</td>
+                        <td th:text="${#temporals.format(prenotazione.dataPrenotazione, 'dd/MM/yyyy')}">01/01/2025</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="table-info">
+                        <td colspan="3"><strong>Totale</strong></td>
+                        <td>
+                            <strong>
+                                <span th:text="${prenotazioni.stream().mapToInt(p -> p.getNumeroBiglietti()).sum()}">10</span>
+                            </strong>
+                        </td>
+                        <td>
+                            <strong>
+                                <span th:text="${#numbers.formatDecimal(prenotazioni.stream().mapToInt(p -> p.getNumeroBiglietti()).sum() * evento.prezzo, 1, 2) + ' €'}">0.00 €</span>
+                            </strong>
+                        </td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        
+        <div th:if="${#lists.isEmpty(prenotazioni)}" class="alert alert-info">
+            Nessuna prenotazione per questo evento.
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

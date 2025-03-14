@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Le Mie Recensioni</title>
+    <title>Le Mie Prenotazioni</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -19,7 +19,7 @@
                         <a class="nav-link" th:href="@{/home}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/prenotazioni/history}">Le Mie Prenotazioni</a>
+                        <a class="nav-link" th:href="@{/recensioni/history}">Le Mie Recensioni</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/auth/logout}">Logout</a>
@@ -31,34 +31,57 @@
 
     <div class="container my-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>Le Mie Recensioni</h1>
+            <h1>Le Mie Prenotazioni</h1>
             <a th:href="@{/home}" class="btn btn-secondary">Torna alla Home</a>
         </div>
 
-        <!-- Lista recensioni -->
-        <div th:if="${!#lists.isEmpty(recensioni)}">
-            <div th:each="recensione : ${recensioni}" class="card mb-4">
-                <div class="card-header d-flex justify-content-between">
-                    <h5 class="mb-0">
-                        <a th:href="@{'/eventi/' + ${recensione.evento.id}}" th:text="${recensione.evento.titolo}">
-                            Titolo Evento
-                        </a>
-                    </h5>
-                    <span class="badge badge-primary" th:text="${'Voto: ' + recensione.valutatione + '/5'}">Rating</span>
-                </div>
-                <div class="card-body">
-                    <p th:text="${recensione.commento}">Commento</p>
-                    <small class="text-muted">
-                        Evento del <span th:text="${#temporals.format(recensione.evento.data, 'dd/MM/yyyy')}">01/01/2025</span>
-                        presso <span th:text="${recensione.evento.sede.nome}">Nome Sede</span>
-                    </small>
-                </div>
+        <!-- Lista prenotazioni -->
+        <div th:if="${!#lists.isEmpty(prenotazioni)}">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Evento</th>
+                            <th>Data Evento</th>
+                            <th>Sede</th>
+                            <th>Biglietti</th>
+                            <th>Prezzo Totale</th>
+                            <th>Data Prenotazione</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="prenotazione : ${prenotazioni}">
+                            <td><a th:href="@{'/eventi/' + ${prenotazione.evento.id}}" th:text="${prenotazione.evento.titolo}">Titolo Evento</a></td>
+                            <td th:text="${#temporals.format(prenotazione.evento.data, 'dd/MM/yyyy')}">01/01/2025</td>
+                            <td th:text="${prenotazione.evento.sede.nome}">Nome Sede</td>
+                            <td th:text="${prenotazione.numeroBiglietti}">1</td>
+                            <td th:text="${#numbers.formatDecimal(prenotazione.numeroBiglietti * prenotazione.evento.prezzo, 1, 2) + ' €'}">0.00 €</td>
+                            <td th:text="${#temporals.format(prenotazione.dataPrenotazione, 'dd/MM/yyyy')}">01/01/2025</td>
+                            <td>
+                                <!-- Pulsante di cancellazione solo per gli eventi futuri -->
+                                <div th:if="${prenotazione.evento.data.isAfter(T(java.time.LocalDate).now())}">
+                                    <form th:action="@{/prenotazioni/{id}(id=${prenotazione.id})}" method="post">
+                                        <input type="hidden" name="_method" value="DELETE" />
+                                        <button type="submit" class="btn btn-sm btn-danger"
+                                                onclick="return confirm('Sei sicuro di voler cancellare questa prenotazione?');">
+                                            Cancella Prenotazione
+                                        </button>
+                                    </form>
+                                </div>
+                                <!-- Messaggio per eventi passati -->
+                                <span th:if="${prenotazione.evento.data.isBefore(T(java.time.LocalDate).now())}" 
+                                      class="badge badge-secondary">Evento passato</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
-        <!-- Messaggio se non ci sono recensioni -->
-        <div th:if="${#lists.isEmpty(recensioni)}" class="alert alert-info">
-            Non hai ancora lasciato recensioni per alcun evento.
+        <!-- Messaggio se non ci sono prenotazioni -->
+        <div th:if="${#lists.isEmpty(prenotazioni)}" class="alert alert-info">
+            Non hai ancora effettuato prenotazioni per eventi.
         </div>
     </div>
 

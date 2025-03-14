@@ -39,4 +39,26 @@ public class PrenotazioneService {
     public int countBigliettiByEvento(Evento evento){
         return prenotazioneRepository.countBigliettiByEvento(evento);
     }
+
+    public void deletePrenotazione(Long Prenotazione){
+        prenotazioneRepository.deleteById(Prenotazione);
+    }
+
+    public boolean isPrenotazioneOwnedByUtente(Long prenotazioneId, Utente utente) {
+        return prenotazioneRepository.findById(prenotazioneId)
+                .map(p -> p.getUtente().getId().equals(utente.getId()))
+                .orElse(false);
+    }
+
+    public Prenotazione findById(Long id) {
+        return prenotazioneRepository.findById(id).orElse(null);
+    }
+
+    public List<Prenotazione> findAll() {
+        return prenotazioneRepository.findAll();
+    }
+
+    public List<Prenotazione> findByEventoId(Long eventoId) {
+        return prenotazioneRepository.findByEventoId(eventoId);
+    }
 }

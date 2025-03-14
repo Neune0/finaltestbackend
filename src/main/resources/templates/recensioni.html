@@ -30,6 +30,21 @@
     </nav>
 
     <div class="container my-5">
+        <!-- Alert messages for feedback -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${success}">Success message</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${error}">Error message</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1>Le Mie Recensioni</h1>
             <a th:href="@{/home}" class="btn btn-secondary">Torna alla Home</a>
@@ -48,10 +63,21 @@
                 </div>
                 <div class="card-body">
                     <p th:text="${recensione.commento}">Commento</p>
-                    <small class="text-muted">
-                        Evento del <span th:text="${#temporals.format(recensione.evento.data, 'dd/MM/yyyy')}">01/01/2025</span>
-                        presso <span th:text="${recensione.evento.sede.nome}">Nome Sede</span>
-                    </small>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            Evento del <span th:text="${#temporals.format(recensione.evento.data, 'dd/MM/yyyy')}">01/01/2025</span>
+                            presso <span th:text="${recensione.evento.sede.nome}">Nome Sede</span>
+                        </small>
+                        
+                        <!-- Delete button form -->
+                        <form th:action="@{/recensioni/{id}(id=${recensione.id})}" method="post">
+                            <input type="hidden" name="_method" value="DELETE" />
+                            <button type="submit" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Sei sicuro di voler eliminare questa recensione?');">
+                                Elimina
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

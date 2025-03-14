@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div th:replace="admin/fragments/navbar :: navbar"></div>
+    
+    <div class="container mt-5">
+        <div class="jumbotron">
+            <h1 class="display-4">Pannello Amministratore</h1>
+            <p class="lead">Gestisci eventi, sedi e visualizza le prenotazioni.</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Gestione Eventi</h5>
+                        <p class="card-text">Crea, modifica ed elimina eventi culturali.</p>
+                        <a th:href="@{/admin/eventi}" class="btn btn-primary">Gestisci Eventi</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Prenotazioni</h5>
+                        <p class="card-text">Visualizza tutte le prenotazioni degli utenti.</p>
+                        <a th:href="@{/admin/prenotazioni}" class="btn btn-primary">Visualizza Prenotazioni</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

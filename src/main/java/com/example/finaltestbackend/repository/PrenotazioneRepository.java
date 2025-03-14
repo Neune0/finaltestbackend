@@ -16,4 +16,6 @@ public interface PrenotazioneRepository extends JpaRepository<Prenotazione, Long
     @Query("SELECT SUM(p.numeroBiglietti) FROM Prenotazione p WHERE p.evento = ?1")
     int countBigliettiByEvento(Evento evento);
     
+    List<Prenotazione> findByEventoId(Long eventoId);
+    
 }
