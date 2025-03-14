@@ -29,7 +29,7 @@ public class PrenotazioneService {
         prenotazione.setEvento(evento);
         prenotazione.setNumeroBiglietti(numeroBiglietti);
         prenotazione.setDataPrenotazione(LocalDate.now());
-        return prenotazione;
+        return prenotazioneRepository.save(prenotazione);
     }
 
     public List<Prenotazione> findByUtente(Utente utente){
