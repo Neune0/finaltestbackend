@@ -1,5 +1,7 @@
 package com.example.finaltestbackend.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.example.finaltestbackend.model.Recensione;
@@ -30,6 +32,11 @@ public class RecensioneService {
 
     public void addRecensione(Recensione recensione) {
         recensioneRepository.save(recensione);
+    }
+
+    public List<Recensione> findByUtente(Long utenteId){
+        Utente utente = utenteService.findById(utenteId);
+        return recensioneRepository.findByUtente(utente);
     }
     
 }

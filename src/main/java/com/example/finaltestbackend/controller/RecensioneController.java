@@ -1,7 +1,11 @@
 package com.example.finaltestbackend.controller;
 
+import java.util.List;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,4 +57,13 @@ public class RecensioneController {
         return  "redirect:/eventi/" + eventoId;
     }
     
+    @GetMapping("/history")
+    public String getRecensioneHistory(Authentication authentication,Model model){
+        String email = authentication.getName();
+        Utente utente = utenteService.findByEmail(email);
+
+        List<Recensione> recensioni = recensioneService.findByUtente(utente.getId());
+        model.addAttribute("recensioni", recensioni);
+        return "recensioni";
+    }
 }
